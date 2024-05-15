@@ -2,9 +2,11 @@ import { useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 import { AccAddress, MsgUpdateContractAdmin } from "@terra-money/feather.js"
-import { useAddress, useChainID } from "data/wallet"
+import { useNetwork } from "data/wallet"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
 import { Form, FormItem } from "components/form"
 import { Input } from "components/form"
+import { getChainIDFromAddress } from "utils/bech32"
 import validate from "../validate"
 import Tx from "../Tx"
 
@@ -16,8 +18,10 @@ interface TxValues {
 const UpdateAdminContractForm = ({ contract }: { contract: AccAddress }) => {
   const { t } = useTranslation()
 
-  const address = useAddress()
-  const chainID = useChainID()
+  const networks = useNetwork()
+  const addresses = useInterchainAddresses()
+  const chainID = getChainIDFromAddress(contract, networks) ?? ""
+  const address = addresses?.[chainID ?? ""]
 
   /* form */
   const form = useForm<TxValues>({ mode: "onChange" })

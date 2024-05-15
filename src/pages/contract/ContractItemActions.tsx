@@ -1,15 +1,23 @@
 import { useTranslation } from "react-i18next"
-import { useAddress } from "data/wallet"
+import { useAddress, useNetwork } from "data/wallet"
+import { useInterchainAddresses } from "auth/hooks/useAddress"
+import { getChainIDFromAddress } from "utils/bech32"
+import { useContract } from "./Contract"
+import ContractQuery from "./ContractQuery"
 import { Button, LinkButton } from "components/general"
 import { ModalButton } from "components/feedback"
 import { ExtraActions } from "components/layout"
-import ContractQuery from "./ContractQuery"
-import { useContract } from "./Contract"
 
 const ContractItemActions = () => {
   const { t } = useTranslation()
-  const connectedAddress = useAddress()
+  const networks = useNetwork()
+  const terraAddress = useAddress()
+  const addresses = useInterchainAddresses()
   const { address, admin } = useContract()
+
+  const chainID = getChainIDFromAddress(address, networks)
+  const connectedAddress =
+    chainID && addresses?.[chainID] ? addresses[chainID] : terraAddress
 
   return (
     <ExtraActions>
