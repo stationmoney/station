@@ -121,7 +121,7 @@ const SendForm = ({ token, decimals, balance }: Props) => {
   /* fee */
   const coins = [{ input, denom: token, taxRequired: true }] as CoinInput[]
   const estimationTxValues = useMemo(
-    () => ({ address: connectedAddress, input: toInput(1, decimals) }),
+    () => ({ address: connectedAddress, input: toInput(input ?? 1, decimals) }),
     [connectedAddress, decimals]
   )
 
